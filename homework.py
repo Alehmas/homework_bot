@@ -1,4 +1,3 @@
-import datetime as dt
 import json
 import logging
 import os
@@ -9,7 +8,7 @@ import requests
 import telegram
 from dotenv import load_dotenv
 
-from exceptions import APIValueException, EmptyDictException
+from exceptions import APIValueException, JsonDecodeException
 
 load_dotenv()
 
@@ -54,37 +53,28 @@ def send_message(bot, message):
 
 def get_api_answer(current_timestamp):
     """Делает запрос к API-сервисау."""
+    timestamp = current_timestamp or int(time.time())
+    params = {'from_date': timestamp}
     try:
-        timestamp = current_timestamp or int(time.time())
-        params = {'from_date': timestamp}
         response = requests.get(url=ENDPOINT, headers=HEADERS, params=params)
         if response.status_code != 200:
-            raise APIValueException
+            raise APIValueException(
+                f'API недоступен: ошибка {response.status_code}')
         return response.json()
-    except APIValueException:
-        message = f'API недоступен: ошибка {response.status_code}'
-        logger.error(message)
-        raise APIValueException(message)
     except json.JSONDecodeError:
-        message = 'Проблема с конвертацией из JSON ответа API'
-        logger.error(message)
-        raise Exception(message)
+        raise JsonDecodeException('Проблема с конвертацией из JSON ответа API')
+    except requests.ConnectionError:
+        raise ConnectionError('Сервер не доступен')
 
 
 def check_response(response):
     """Проверяет ответ API на корректность."""
     if not isinstance(response, dict):
-        message = 'Полученный ответ не словарь'
-        logger.error(message)
-        raise TypeError(message)
+        raise TypeError('Полученный ответ не словарь')
     if 'homeworks' not in response:
-        message = 'Нет ключа homeworks'
-        logger.error(message)
-        raise KeyError(message)
+        raise KeyError('Нет ключа homeworks')
     if not isinstance(response['homeworks'], list):
-        message = 'В ответе нет списка'
-        logger.error(message)
-        raise TypeError(message)
+        raise TypeError('В ответе нет списка')
     return response.get('homeworks')
 
 
@@ -94,11 +84,11 @@ def parse_status(homework):
     homework_status = homework.get('status')
     if homework_status in HOMEWORK_STATUSES:
         verdict = HOMEWORK_STATUSES[homework_status]
-    elif homework_status is None:
-        logger.error('Отсутствует ключ homework_status')
+    elif homework_name is None:
         raise KeyError('Отсутствует ключ homework_status')
+    elif homework_status is None:
+        raise KeyError('Отсутствует ключ homework_name')
     else:
-        logger.error('Неожиданный статус')
         raise KeyError('Неожиданный статус')
     logger.info('Измение статуса домашнего задания получено')
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
@@ -107,11 +97,14 @@ def parse_status(homework):
 def check_tokens():
     """Проверка переменных окружения."""
     tokens = ['PRACTICUM_TOKEN', 'TELEGRAM_TOKEN', 'TELEGRAM_CHAT_ID']
+    counter = 0
     for name in tokens:
         token = globals()[name]
-        if token is None or token == '':
+        if not token:
+            counter += 1
             logger.critical(f'Не хватает переменной {name}')
-            return False
+    if counter > 0:
+        return False
     logger.info('Все переменные окружения получены')
     return True
 
@@ -119,7 +112,7 @@ def check_tokens():
 def main():
     """Основная логика работы бота."""
     if not check_tokens():
-        return logger.critical('Программа принудительно остановлена.')
+        return
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())
     old_message = ''
@@ -129,28 +122,20 @@ def main():
             response = get_api_answer(current_timestamp)
             homework_date = check_response(response)
             if len(homework_date) == 0:
-                raise EmptyDictException
-            upd_time = dt.datetime.strptime(
-                homework_date[0].get('date_updated'),
-                '%Y-%m-%dT%H:%M:%SZ'
-            )
-            upd_time_unix = time.mktime(upd_time.timetuple())
-            if upd_time_unix > current_timestamp:
+                logger.debug('Статус домашней работы не изменился')
+            else:
                 message = parse_status(homework_date[0])
                 send_message(bot, message)
-            current_timestamp = int(time.time())
-            time.sleep(RETRY_TIME)
-        except EmptyDictException:
-            logger.debug('Статус домашней работы не изменился')
-            time.sleep(RETRY_TIME)
+                current_timestamp = response.get('current_date')
+                old_message = ''
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
+            logger.error(message)
             if old_message != message:
                 send_message(bot, message)
                 old_message = message
+        finally:
             time.sleep(RETRY_TIME)
-        else:
-            ...
 
 
 if __name__ == '__main__':

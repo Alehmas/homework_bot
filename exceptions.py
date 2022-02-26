@@ -7,7 +7,7 @@ class APIValueException(Exception):
     pass
 
 
-class EmptyDictException(Exception):
+class JsonDecodeException(Exception):
     """Ошибка если отсутствуют работы в списке доманшних работ."""
 
     pass
