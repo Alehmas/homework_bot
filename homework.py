@@ -8,7 +8,7 @@ import requests
 import telegram
 from dotenv import load_dotenv
 
-from exceptions import APIValueException, JsonDecodeException
+from exceptions import APIValueException
 
 load_dotenv()
 
@@ -62,7 +62,7 @@ def get_api_answer(current_timestamp):
                 f'API недоступен: ошибка {response.status_code}')
         return response.json()
     except json.JSONDecodeError:
-        raise JsonDecodeException('Проблема с конвертацией из JSON ответа API')
+        raise APIValueException('Проблема с конвертацией из JSON ответа API')
     except requests.ConnectionError:
         raise ConnectionError('Сервер не доступен')
 
@@ -127,7 +127,7 @@ def main():
                 message = parse_status(homework_date[0])
                 send_message(bot, message)
                 current_timestamp = response.get('current_date')
-                old_message = ''
+            old_message = ''
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
             logger.error(message)
