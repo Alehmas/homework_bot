@@ -1,7 +1,7 @@
-"""Модуль ошибок."""
+"""Module for exceptions."""
 
 
 class APIValueException(Exception):
-    """Ошибка если API недоступен."""
+    """Error if API is not available."""
 
     pass

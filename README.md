@@ -1,123 +1,124 @@
-#  Telegram бот для контроля статуса домашнего задания
+#  Telegram bot to control the status of homework
 
-##  Описание
-Telegram-бота, который обращается к API сервису Практикум.Домашка и узнавает статус вашей домашней работы:
-взята ли ваша домашка в ревью, проверена ли она, а если проверена — то принял её ревьюер или вернул на доработку
+##  Description
+Telegram bot that calls the Praktikum.Homework API service and finds out the status of your homework:
+whether your homework was reviewed, whether it was checked, and if it was checked,
+then the reviewer accepted it or returned it for revision
 
-##  Используемые технологии
+##  Technologies used
 - Python
 - Python-Telegram-Bot
 
-##  Функциональность
-Бот умеет:
-- раз в 10 минут опрашивает API сервис Практикум.Домашка и проверяет статус отправленной на ревью домашней работы
-- при обновлении статуса анализирует ответ API и отправляет вам соответствующее уведомление в Telegram
-- логирует свою работу и сообщает вам о важных проблемах сообщением в Telegram
+##  Functionality
+The bot can:
+- polls the Praktikum.Homework API service every 10 minutes and checks the status of the homework submitted for review
+- when updating the status, it analyzes the API response and sends you a corresponding notification in Telegram
+- logs its work and informs you about important problems with a message in Telegram
 
-##  Запуск проекта локально
-- Клонировать репозиторий
+##  Running the project locally
+- Clone repository
 ```
 git@github.com:Oleg-2006/homework_bot.git
 ```
-- Перейти в новую директорию
+- Change to new directory
 ```
 cd homework_bot/
 ```
-- Инициализировать виртуальное окружение
+- Initialize virtual environment
 ```
 python -m venv venv
 ```
-- Активировать виртуальное окружение
+- Activate virtual environment
 ```
 source venv/Scripts/activate
 ```
-- Установить зависимости проекта
+- Install project dependencies
 ```
 pip install -r requirements.txt
 ```
-- Настройка переменных окружения
-Создать файл .env, в котором прописать идентификаторы и токены для работы с API Telegram и Яндекс.Домашка:
-    * Указать свой токен сервиса Практикум.Домашка
+- Setting environment variables
+Create an .env file in which to register identifiers and tokens for working with the Telegram API and Yandex.Domashka:
+    * Specify your service token Praktikum.Home
     ```
     PRACTICUM_TOKEN=<PRACTICUM_TOKEN>
     ```
-    * Указать API-токен бота Telegram. (При помощи @BotFather в Telegram создайте нового бота и получите API TOKEN)
+    * Specify the API token of the Telegram bot. (Use @BotFather in Telegram to create a new bot and get API TOKEN)
     ```
     TELEGRAM_TOKEN=<API TOKEN>
     ```
-    * Указать идентификатор Telegram, на который бот будет слать сообщения (узнать у @userinfobot):
+    * Specify the Telegram ID to which the bot will send messages (check with @userinfobot):
     ```
     TELEGRAM_CHAT_ID=<TELEGRAM_CHAT_ID>
     ```
-- В корневой директории выполните команду для запуска бот
+- In the root directory, run the command to start the bot
 ```
 python homework.py
 ```
-##  Запуск проекта на сервере
-для примера используется хостинг Heroku
-- Зарегистрируйтесь на Heroku
-- Создайте приложение (кнопка New → Create new app).
-  Придумайте и укажите название для приложения. Выберите географически близкий к вам регион.
-- Теперь свяжите ваш аккаунт Heroku c GitHub: в интерфейсе Heroku зайдите в раздел Deploy,
-  в разделе Deployment method выберите GitHub и нажмите на кнопку Connect to GitHu
-  Чтобы связать аккаунты — вам будет предложено аутентифицироваться через GitHub.
-  Затем в открывшемся окне укажите название репозитория, в котором находится код.
-  Осталось только нажать на кнопку Deploy Branch: Heroku установит все зависимости и опубликует приложение на сервере.
-  Чтобы всё запустилось, в репозиторий нужно поместить два служебных файла:
-    - **requirements.txt** со списком зависимостей, чтобы Heroku знал, какие пакеты ему нужно установить;
-    - файл **Procfile**, в котором должна быть указана «точка входа» — файл, который должен быть выполнен для запуска проекта.
+##  Running the project on the server
+the example uses Heroku hosting
+- Register on Heroku
+- Create an application (button New → Create new app).
+  Come up with and enter a name for the application. Select a region that is geographically close to you.
+- Now link your Heroku account to GitHub: in the Heroku interface go to the Deploy section,
+  in the Deployment method section, select GitHub and click on the Connect to GitHu button
+  To link accounts, you will be prompted to authenticate through GitHub.
+  Then, in the window that opens, specify the name of the repository where the code is located.
+  It remains only to click on the Deploy Branch button: Heroku will install all the dependencies and publish the application on the server.
+  In order for everything to start, two service files need to be placed in the repository:
+    - **requirements.txt** with a list of dependencies so Heroku knows what packages it needs to install;
+    - the **Procfile** file, which must contain the "entry point" - the file that must be executed to start the project.
 
-- Добавьте `PRACTICUM_TOKEN`, `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
-  Добавить переменные окружения можно вручную в настройках Heroku, в разделе Settings → Config Vars
+- Add `PRACTICUM_TOKEN`, `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID`
+  You can add environment variables manually in the Heroku settings, in the Settings → Config Vars section
 
-- Запустите бот. Перейдите во вкладку Resources и активируйте переключатель напротив строки worker python homework.py.
-  Для этого нажмите на пиктограмму с карандашом справа от переключателя,
-  активируйте переключатель и подтвердите действие, нажав на появившуюся кнопку Confirm.
+- Start the bot. Go to the Resources tab and activate the switch opposite the worker python homework.py line.
+  To do this, click on the pencil icon to the right of the switch,
+  activate the switch and confirm the action by clicking on the Confirm button that appears.
 
-[Здесь](https://github.com/heroku/python-sample) доступен пример размещения проекта на Heroku
-Подробные инструкции есть в [документации](https://devcenter.heroku.com/categories/deployment)
+[Здесь](https://github.com/heroku/python-sample) an example of hosting a project on Heroku is available
+Detailed instructions are in [documentation](https://devcenter.heroku.com/categories/deployment)
 
-##  Описание функций
-- `main()` в ней описана основная логика работы программы. 
-Все остальные функции  запуска.ncz из неё. 
-Последовательность действий такая:
-    - Сделать запрос к API.
-    - Проверить ответ.
-    - Если есть обновления — получить статус работы из обновления и отправить сообщение в Telegram.
-    - Подождать некоторое время и сделать новый запрос.
+##  Description of functions
+- `main()` it describes the main logic of the program.
+All other functions run .ncz from it.
+The sequence of actions is as follows:
+    - Make a request to the API.
+    - Check the answer.
+    - If there are updates, get the work status from the update and send a message to Telegram.
+    - Wait a while and make a new request.
 
-- `check_tokens()` проверяет доступность переменных окружения, которые необходимы для работы программы.
-Если отсутствует хотя бы одна переменная окружения — функция возвращает False, иначе — True.
+- `check_tokens()` checks the availability of environment variables that are necessary for the program to work.
+If at least one environment variable is missing, the function returns False, otherwise True.
 
-- `get_api_answer()` делает запрос к единственному эндпоинту API-сервиса.
-В качестве параметра функция получает временную метку.
-В случае успешного запроса возвращает ответ API, преобразовав его из формата JSON к типам данных Python.
+- `get_api_answer()` makes a request to a single API service endpoint.
+The function receives a timestamp as a parameter.
+If the request is successful, returns the API response, converting it from JSON format to Python data types.
 
-- `check_response()` проверяет ответ API на корректность.
-В качестве параметра функция получает ответ API, приведенный к типам данных Python.
-Если ответ API соответствует ожиданиям, то функция возвращает список домашних работ (он может быть и пустым),
-доступный в ответе API по ключу 'homeworks'.
+- `check_response()` checks the API response for correctness.
+As a parameter, the function receives an API response cast to Python data types.
+If the API response matches expectations, then the function returns a list of homework (it can be empty),
+available in the API response with the key 'homeworks'.
 
-- `parse_status()` извлекает из информации о конкретной домашней работе статус этой работы.
-В качестве параметра функция получает только один элемент из списка домашних работ.
-В случае успеха, функция возвращает подготовленную для отправки в Telegram строку,
-содержащую один из вердиктов словаря HOMEWORK_STATUSES.
+- `parse_status()` extracts the status of this work from information about a particular homework.
+As a parameter, the function receives only one element from the list of homework.
+If successful, the function returns a string prepared for sending to Telegram,
+containing one of the verdicts of the HOMEWORK_STATUSES dictionary.
 
-- `send_message()` отправляет сообщение в Telegram чат, определяемый переменной окружения TELEGRAM_CHAT_ID.
-Принимает на вход два параметра: экземпляр класса Bot и строку с текстом сообщения.
+- `send_message()` sends a message to the Telegram chat specified by the TELEGRAM_CHAT_ID environment variable.
+It takes two parameters as input: an instance of the Bot class and a string with the message text.
 
-##  Логирование
-Логируемые события:
-- отсутствие обязательных переменных окружения во время запуска бота (уровень **CRITICAL**)
-- удачная отправка любого сообщения в Telegram (уровень **INFO**)
-- сбой при отправке сообщения в Telegram (уровень **ERROR**)
-- недоступность эндпоинта https://practicum.yandex.ru/api/user_api/homework_statuses/ (уровень **ERROR**)
-- любые другие сбои при запросе к эндпоинту (уровень **ERROR**)
-- отсутствие ожидаемых ключей в ответе API (уровень **ERROR**);
-- недокументированный статус домашней работы, обнаруженный в ответе API (уровень **ERROR**);
-- отсутствие в ответе новых статусов (уровень **DEBUG**).
+## Logging
+Logged events:
+- lack of required environment variables during bot launch (**CRITICAL** level)
+- successful sending of any message to Telegram (**INFO** level)
+- crash when sending a message to Telegram (**ERROR** level)
+- unavailability of https://practicum.yandex.ru/api/user_api/homework_statuses/ endpoint (**ERROR** level)
+- any other failures when requesting an endpoint (**ERROR** level)
+- lack of expected keys in the API response (**ERROR** level);
+- undocumented homework status found in API response (**ERROR** level);
+- absence of new statuses in the response (**DEBUG** level).
 
-События уровня ERROR не только логируются, но и пересылается информацию о них в ваш Telegram в тех случаях,
-когда это технически возможно (если API Telegram перестанет отвечать или при старте программы не окажется
-нужной переменной окружения — ничего отправить не получится).
+Events of the ERROR level are not only logged, but information about them is also sent to your Telegram in those cases
+when it is technically possible (if the Telegram API stops responding or when the program starts, there is no
+the desired environment variable - nothing will be sent).
 
