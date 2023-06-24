@@ -7,7 +7,6 @@ then the reviewer accepted it or returned it for revision
 
 ##  Technologies used
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) ![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
-- Python-Telegram-Bot
 
 ##  Functionality
 The bot can:
