@@ -6,7 +6,7 @@ whether your homework was reviewed, whether it was checked, and if it was checke
 then the reviewer accepted it or returned it for revision
 
 ##  Technologies used
-- Python
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) ![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
 - Python-Telegram-Bot
 
 ##  Functionality
@@ -122,3 +122,5 @@ Events of the ERROR level are not only logged, but information about them is als
 when it is technically possible (if the Telegram API stops responding or when the program starts, there is no
 the desired environment variable - nothing will be sent).
 
+## Authors
+- [Aleh Maslau](https://github.com/Oleg-2006)
