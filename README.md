@@ -127,4 +127,4 @@ when it is technically possible (if the Telegram API stops responding or when th
 the desired environment variable - nothing will be sent).
 
 ## Authors
-- [Aleh Maslau](https://github.com/Oleg-2006)
+- [Aleh Maslau](https://github.com/Alehmas)
