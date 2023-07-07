@@ -19,7 +19,7 @@ notification in Telegram
 ##  Running the project locally
 - Clone repository
 ```
-git@github.com:Alehmas/homework_bot.git
+git clone git@github.com:Alehmas/homework_bot.git
 ```
 - Change to new directory
 ```
